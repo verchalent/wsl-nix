@@ -40,7 +40,9 @@ don't run the installer. Start the environment directly, with nothing installed 
 nix run github:verchalent/wsl-nix
 ```
 
-This opens `zsh-prompt` with every tool in this flake on `PATH`.
+This opens `zsh-prompt` with every tool in this flake on `PATH`. No extra flags are needed:
+the lock file is committed, so nix doesn't try to write one. If you've run it recently and want
+the newest push, add `--refresh` (nix caches GitHub flakes for about an hour).
 
 ### Changing what's installed
 
