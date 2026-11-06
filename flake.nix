@@ -15,7 +15,7 @@
 
   # Wiring only. What goes in an environment lives in hosts/<name>/ and modules/.
   outputs =
-    { nixpkgs, ... }@inputs:
+    { self, nixpkgs, ... }@inputs:
     let
       lib = nixpkgs.lib;
       systems = [
@@ -46,6 +46,27 @@
       # `...#<name>` picks another.
       packages = lib.genAttrs systems (
         system: lib.mapAttrs (mkEnv system) hosts // { default = mkEnv system "wsl" hosts.wsl; }
+      );
+
+      # `nix run github:verchalent/wsl-nix` starts zsh-prompt with the whole environment on
+      # PATH, without installing anything into a profile.
+      apps = lib.genAttrs systems (
+        system:
+        let
+          env = self.packages.${system}.default;
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        {
+          default = {
+            type = "app";
+            program = lib.getExe (
+              pkgs.writeShellScriptBin "wsl-nix" ''
+                export PATH="${env}/bin:$PATH"
+                exec ${env}/bin/zsh-prompt "$@"
+              ''
+            );
+          };
+        }
       );
 
       formatter = lib.genAttrs systems (system: nixpkgs.legacyPackages.${system}.nixfmt);

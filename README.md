@@ -7,7 +7,9 @@ shell. That repo owns the shell experience; this one consumes it and adds dev to
 
 ## Usage
 
-On a fresh Ubuntu-based WSL2 distro, as your normal user (it uses `sudo` where needed):
+### New system setup (once)
+
+`install.sh` is only for setting up a new distro. On a fresh Ubuntu-based WSL2 distro, as your normal user (it uses `sudo` where needed):
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/verchalent/wsl-nix/main/install.sh | bash
@@ -15,7 +17,7 @@ curl -fsSL https://raw.githubusercontent.com/verchalent/wsl-nix/main/install.sh 
 
 or from a clone: `./install.sh`. Then open a new terminal; you land in the prompt.
 
-What the script does (safe to re-run; a second run upgrades the environment):
+What the script does (safe to re-run if it is interrupted):
 
 1. Installs prerequisites with apt: `curl`, `xz-utils`, `ca-certificates`, `git`.
 2. Writes `~/.config/nix/nix.conf` to enable flakes (only if not already set).
@@ -29,8 +31,22 @@ What the script does (safe to re-run; a second run upgrades the environment):
    unaffected. Skip it with `./install.sh --no-shell`; bypass it once with
    `WSL_NIX_NO_PROMPT=1 bash`.
 
-Change what's installed: edit a module (or the host list), push, then run `install.sh` again
-(or `nix profile upgrade --all`). Free disk space with `nixclean` / `nixdeepclean` (below).
+### Everywhere else: `nix run`
+
+On a machine that already has Nix with flakes enabled (including this distro after setup),
+don't run the installer. Start the environment directly, with nothing installed or changed:
+
+```sh
+nix run github:verchalent/wsl-nix
+```
+
+This opens `zsh-prompt` with every tool in this flake on `PATH`.
+
+### Changing what's installed
+
+Edit a module (or the host list) and push. On a set-up system, apply it with
+`nix profile upgrade --all`; with `nix run` you always get the latest. Free disk space with
+`nixclean` / `nixdeepclean` (below).
 
 ## Layout
 
