@@ -120,8 +120,11 @@ that file wins.
 
 ## Pins
 
-`nixpkgs` and `zsh-prompt` are pinned in `flake.lock`. Bump one input at a time, and only to a
-revision at least 8 days old (supply-chain cooldown):
+`nixpkgs` and `zsh-prompt` are pinned in `flake.lock`, which a weekly GitHub Action
+(`.github/workflows/update-lock.yml`, also runnable by hand from the Actions tab) refreshes:
+`nixpkgs` moves to the newest commit on the release branch that is at least 8 days old
+(supply-chain cooldown), `zsh-prompt` to its latest. It builds the default environment first
+and only then commits `flake.lock` to `main`. To bump by hand:
 
 ```sh
 nix flake lock --override-input nixpkgs github:NixOS/nixpkgs/<rev>
