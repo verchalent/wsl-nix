@@ -2,7 +2,7 @@
 # Plain data (no pkgs), so the flake can read `unfree` before building nixpkgs.
 {
   # Unfree packages allowed by name, not wholesale.
-  unfree = [ "claude-code" ];
+  # unfree = [ "claude-code" ];
 
   # Each module is `{ pkgs, inputs, ... }: [ package ... ]`.
   modules = [
